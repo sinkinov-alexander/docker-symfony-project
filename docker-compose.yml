@@ -1,0 +1,29 @@
+version: "2"
+
+services:
+    web:
+        image: nginx
+        ports:
+            - "80:80"
+        volumes:
+            - ./code:/code
+            - ./site.conf:/etc/nginx/conf.d/default.conf
+            - ./error.log:/var/log/nginx/error.log;
+    php:
+        container_name: php
+        build: ./php
+        volumes:
+            - ./code:/code
+        depends_on:
+            - mongo
+        links:
+            - mongo
+    mongo:
+        image: mongo:latest
+        volumes:
+            - ./mongo:/var/lib/mongodb
+    elasticsearch:
+        image: elasticsearch
+        ports:
+            - "9200:9200"
+            - "9300:9300"
